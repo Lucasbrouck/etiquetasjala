@@ -23,6 +23,8 @@ if (urlStore && urlPass) {
   window.history.replaceState({}, document.title, window.location.pathname);
   document.getElementById('loginStoreId').value = urlStore;
   document.getElementById('loginPassword').value = urlPass;
+  // Clear any existing token and force the new login
+  localStorage.removeItem('luflex_auth');
   doLogin(urlStore, urlPass);
 } else {
   // Check for saved login
