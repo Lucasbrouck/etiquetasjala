@@ -12,6 +12,19 @@ const tabs = { pdv: document.getElementById('pdvTab'), crud: document.getElement
 const navButtons = document.querySelectorAll('.nav-btn');
 const connStatus = document.getElementById('connectionStatus');
 
+function updateConnectionStatus(isOnline, hasPrinter) {
+  connStatus.classList.remove('offline', 'warning');
+  if (!isOnline) {
+    connStatus.textContent = 'Sem conexão';
+    connStatus.classList.add('offline');
+  } else if (!hasPrinter) {
+    connStatus.textContent = 'Conectado sem impressora';
+    connStatus.classList.add('warning');
+  } else {
+    connStatus.textContent = 'Conectado';
+  }
+}
+
 // 1. LOGIN
 
 // Hide Windows download link on mobile devices
@@ -72,6 +85,7 @@ function doLogin(storeId, password) {
       localStorage.setItem('luflex_auth', JSON.stringify({ storeId, password }));
       categories = res.categories;
       products = res.products;
+      updateConnectionStatus(true, res.printerOnline);
       screens.login.classList.remove('active');
       screens.app.classList.add('active');
       updateUI();
@@ -93,26 +107,29 @@ document.getElementById('btnLogout').addEventListener('click', () => {
 socket.on('sync-data', (data) => {
   categories = data.categories;
   products = data.products;
+  updateConnectionStatus(true, data.printerOnline);
   updateUI();
   showToast('Dados sincronizados');
 });
 
 socket.on('store-offline', () => {
+  updateConnectionStatus(false, false);
   connStatus.textContent = 'Loja Offline (Computador desconectado)';
-  connStatus.classList.add('offline');
 });
 socket.on('disconnect', () => {
+  updateConnectionStatus(false, false);
   connStatus.textContent = 'Sem conexão com o servidor';
-  connStatus.classList.add('offline');
 });
 socket.on('connect', () => {
   if (screens.app.classList.contains('active')) {
-    connStatus.textContent = 'Conectado';
-    connStatus.classList.remove('offline');
+    // We don't know printer status yet, wait for silent login
+    updateConnectionStatus(true, false);
     // Try to re-login silently
     const storeId = document.getElementById('loginStoreId').value.trim();
     const password = document.getElementById('loginPassword').value.trim();
-    socket.emit('mobile-login', { storeId, password }, () => {});
+    socket.emit('mobile-login', { storeId, password }, (res) => {
+      if (res.success) updateConnectionStatus(true, res.printerOnline);
+    });
   }
 });
 

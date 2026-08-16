@@ -47,8 +47,9 @@ body { background-color: var(--bg); color: var(--text-main); -webkit-font-smooth
 .tab-content { display: none; padding: 16px; padding-bottom: 100px; /* space for queue */ }
 .tab-content.active { display: block; }
 
-.connection-status { position: fixed; bottom: 0; left: 0; right: 0; height: 24px; line-height: 24px; text-align: center; font-size: 0.75rem; background: var(--success); color: white; font-weight: bold; z-index: 30; }
+.connection-status { position: fixed; bottom: 0; left: 0; right: 0; height: 24px; line-height: 24px; text-align: center; font-size: 0.75rem; background: var(--success); color: white; font-weight: bold; z-index: 30; transition: background-color 0.3s; }
 .connection-status.offline { background: var(--danger); }
+.connection-status.warning { background: #D97706; } /* Orange */
 
 /* ================= PDV & LISTS ================= */
 .horizontal-scroll { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 8px; margin-bottom: 16px; }

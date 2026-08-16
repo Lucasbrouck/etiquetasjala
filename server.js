@@ -29,7 +29,7 @@ io.on('connection', (socket) => {
 
   // App local connects and registers the store as online
   socket.on('local-app-connect', (data, callback) => {
-    const { storeId, password, categories, products } = data;
+    const { storeId, password, categories, products, printerOnline } = data;
     
     if (!storeId || !password) {
       return callback({ success: false, error: 'Credenciais inválidas' });
@@ -40,7 +40,8 @@ io.on('connection', (socket) => {
       password: password,
       localAppSocketId: socket.id,
       categories: categories || [],
-      products: products || []
+      products: products || [],
+      printerOnline: !!printerOnline
     };
 
     // Join a room specifically for this store's mobile clients
@@ -51,7 +52,8 @@ io.on('connection', (socket) => {
     // Notify any already connected mobile clients that the store is online and sync data
     socket.to(`store_${storeId}`).emit('sync-data', {
       categories: stores[storeId].categories,
-      products: stores[storeId].products
+      products: stores[storeId].products,
+      printerOnline: stores[storeId].printerOnline
     });
 
     callback({ success: true });
@@ -59,13 +61,14 @@ io.on('connection', (socket) => {
 
   // App local sends a sync update (e.g. after a local CRUD operation or receiving a remote CRUD operation)
   socket.on('local-app-sync', (data) => {
-    const { storeId, categories, products } = data;
+    const { storeId, categories, products, printerOnline } = data;
     if (stores[storeId] && stores[storeId].localAppSocketId === socket.id) {
       stores[storeId].categories = categories;
       stores[storeId].products = products;
+      if (printerOnline !== undefined) stores[storeId].printerOnline = !!printerOnline;
       
       // Broadcast to mobile clients
-      socket.to(`store_${storeId}`).emit('sync-data', { categories, products });
+      socket.to(`store_${storeId}`).emit('sync-data', { categories, products, printerOnline: stores[storeId].printerOnline });
     }
   });
 
@@ -96,7 +99,8 @@ io.on('connection', (socket) => {
     callback({
       success: true,
       categories: stores[storeId].categories,
-      products: stores[storeId].products
+      products: stores[storeId].products,
+      printerOnline: stores[storeId].printerOnline
     });
   });
 
