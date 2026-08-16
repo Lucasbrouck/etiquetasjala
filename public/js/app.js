@@ -432,9 +432,20 @@ function renderCategoryList() {
 // TOAST
 function showToast(msg) {
   const container = document.getElementById('toastContainer');
+  
+  // Limite de 2 toasts empilhados
+  while (container.children.length >= 2) {
+    container.removeChild(container.firstChild);
+  }
+  
   const div = document.createElement('div');
   div.className = 'toast';
   div.textContent = msg;
   container.appendChild(div);
-  setTimeout(() => div.remove(), 3000);
+  
+  setTimeout(() => {
+    if (div.parentNode === container) {
+      div.remove();
+    }
+  }, 1500);
 }
