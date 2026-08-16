@@ -13,6 +13,17 @@ const navButtons = document.querySelectorAll('.nav-tab');
 const connStatus = document.getElementById('connectionStatus');
 
 // 1. LOGIN
+// Check for saved login
+const savedAuth = localStorage.getItem('luflex_auth');
+if (savedAuth) {
+  try {
+    const { storeId, password } = JSON.parse(savedAuth);
+    document.getElementById('loginStoreId').value = storeId;
+    document.getElementById('loginPassword').value = password;
+    doLogin(storeId, password);
+  } catch (e) {}
+}
+
 document.getElementById('btnLogin').addEventListener('click', () => {
   const storeId = document.getElementById('loginStoreId').value.trim();
   const password = document.getElementById('loginPassword').value.trim();
@@ -23,20 +34,37 @@ document.getElementById('btnLogin').addEventListener('click', () => {
     return;
   }
   
+  doLogin(storeId, password);
+});
+
+function doLogin(storeId, password) {
+  const errorEl = document.getElementById('loginError');
   document.getElementById('btnLogin').textContent = 'Conectando...';
+  document.getElementById('btnLogin').disabled = true;
   
   socket.emit('mobile-login', { storeId, password }, (res) => {
     document.getElementById('btnLogin').textContent = 'Acessar';
+    document.getElementById('btnLogin').disabled = false;
+    
     if (res.success) {
+      localStorage.setItem('luflex_auth', JSON.stringify({ storeId, password }));
       categories = res.categories;
       products = res.products;
       screens.login.classList.remove('active');
       screens.app.classList.add('active');
       updateUI();
     } else {
+      localStorage.removeItem('luflex_auth');
       errorEl.textContent = res.error;
+      screens.app.classList.remove('active');
+      screens.login.classList.add('active');
     }
   });
+}
+
+document.getElementById('btnLogout').addEventListener('click', () => {
+  localStorage.removeItem('luflex_auth');
+  location.reload();
 });
 
 // 2. SOCKET EVENTS
