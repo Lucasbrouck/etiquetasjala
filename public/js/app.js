@@ -9,7 +9,7 @@ let activeCategoryId = null;
 // DOM Elements
 const screens = { login: document.getElementById('loginScreen'), app: document.getElementById('appScreen') };
 const tabs = { pdv: document.getElementById('pdvTab'), crud: document.getElementById('crudTab') };
-const navButtons = document.querySelectorAll('.nav-tab');
+const navButtons = document.querySelectorAll('.nav-btn');
 const connStatus = document.getElementById('connectionStatus');
 
 // 1. LOGIN
@@ -205,6 +205,8 @@ function renderProducts() {
     card.addEventListener('click', () => addToQueue(p));
     container.appendChild(card);
   });
+  
+  if (window.lucide) lucide.createIcons();
 }
 
 function renderCrudProducts() {
@@ -230,6 +232,8 @@ function renderCrudProducts() {
     
     container.appendChild(card);
   });
+  
+  if (window.lucide) lucide.createIcons();
 }
 
 // 5. QUEUE LOGIC

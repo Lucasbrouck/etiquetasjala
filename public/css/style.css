@@ -56,8 +56,8 @@ body { background-color: var(--bg); color: var(--text-main); -webkit-font-smooth
 .cat-pill { padding: 8px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; white-space: nowrap; font-size: 0.875rem; font-weight: 500; cursor: pointer; }
 .cat-pill.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-.product-list { display: flex; flex-direction: column; gap: 12px; }
-.prod-card { background: var(--surface); padding: 16px; border-radius: 12px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.product-list { display: flex; flex-direction: column; gap: 6px; }
+.prod-card { background: var(--surface); padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
 .prod-card:active { background: var(--bg); }
 .prod-info h4 { margin-bottom: 4px; font-size: 1rem; }
 .prod-meta { display: flex; gap: 8px; font-size: 0.75rem; }

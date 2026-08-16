@@ -39,10 +39,12 @@
 
   <!-- APLICATIVO PRINCIPAL -->
   <div id="appScreen" class="screen">
-    <nav class="mobile-nav">
-      <button class="nav-tab active" data-target="pdvTab">Etiquetas</button>
-      <button class="nav-tab" data-target="crudTab">Produtos</button>
-      <button class="btn-icon" id="btnLogout" style="padding: 0 16px; color: var(--danger); display: flex; align-items: center;" title="Sair"><i data-lucide="log-out"></i></button>
+    <nav class="mobile-nav" style="justify-content: space-between; padding: 0 16px; align-items: center; min-height: 56px;">
+      <div style="font-weight: 700; font-size: 1.125rem; color: var(--primary);">Etiquetas</div>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn-icon nav-btn" data-target="crudTab" style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;" title="Configurações"><i data-lucide="settings"></i></button>
+        <button class="btn-icon" id="btnLogout" style="color: var(--danger); display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;" title="Sair"><i data-lucide="log-out"></i></button>
+      </div>
     </nav>
     
     <div class="connection-status" id="connectionStatus">Conectado</div>
@@ -63,7 +65,8 @@
     <!-- TAB: CRUD -->
     <div id="crudTab" class="tab-content">
       <div class="crud-header">
-        <h2>Produtos</h2>
+        <button class="btn-icon nav-btn" data-target="pdvTab" style="margin-right: 8px;"><i data-lucide="arrow-left"></i></button>
+        <h2 style="flex:1; font-size: 1.25rem;">Configurações</h2>
         <button class="btn btn-sm btn-primary" id="btnNewProduct" style="display: flex; align-items: center; gap: 4px;"><i data-lucide="plus" style="width:16px;height:16px;"></i> Novo</button>
       </div>
       <div class="product-list" id="mobileCrudProducts">
