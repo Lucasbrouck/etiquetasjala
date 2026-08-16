@@ -13,15 +13,28 @@ const navButtons = document.querySelectorAll('.nav-tab');
 const connStatus = document.getElementById('connectionStatus');
 
 // 1. LOGIN
-// Check for saved login
-const savedAuth = localStorage.getItem('luflex_auth');
-if (savedAuth) {
-  try {
-    const { storeId, password } = JSON.parse(savedAuth);
-    document.getElementById('loginStoreId').value = storeId;
-    document.getElementById('loginPassword').value = password;
-    doLogin(storeId, password);
-  } catch (e) {}
+// Check for URL parameters (NFC tag support)
+const urlParams = new URLSearchParams(window.location.search);
+const urlStore = urlParams.get('store');
+const urlPass = urlParams.get('pass');
+
+if (urlStore && urlPass) {
+  // Clear URL parameters for security
+  window.history.replaceState({}, document.title, window.location.pathname);
+  document.getElementById('loginStoreId').value = urlStore;
+  document.getElementById('loginPassword').value = urlPass;
+  doLogin(urlStore, urlPass);
+} else {
+  // Check for saved login
+  const savedAuth = localStorage.getItem('luflex_auth');
+  if (savedAuth) {
+    try {
+      const { storeId, password } = JSON.parse(savedAuth);
+      document.getElementById('loginStoreId').value = storeId;
+      document.getElementById('loginPassword').value = password;
+      doLogin(storeId, password);
+    } catch (e) {}
+  }
 }
 
 document.getElementById('btnLogin').addEventListener('click', () => {
