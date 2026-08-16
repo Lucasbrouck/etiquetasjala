@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Etiquetas Jalapeño - PDV Mobile</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  
+  <!-- TELA DE LOGIN -->
+  <div id="loginScreen" class="screen active">
+    <div class="login-container">
+      <div class="logo">🏷️</div>
+      <h1>Etiquetas Jalapeño</h1>
+      <p class="subtitle">PDV Mobile</p>
+      
+      <div class="form-group">
+        <label>ID da Loja</label>
+        <input type="text" id="loginStoreId" placeholder="Ex: matriz" autocapitalize="none">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="loginPassword" placeholder="******">
+      </div>
+      
+      <button class="btn btn-primary btn-block mt-3" id="btnLogin">Acessar</button>
+      <p id="loginError" class="error-msg"></p>
+    </div>
+  </div>
+
+  <!-- APLICATIVO PRINCIPAL -->
+  <div id="appScreen" class="screen">
+    <nav class="mobile-nav">
+      <button class="nav-tab active" data-target="pdvTab">PDV</button>
+      <button class="nav-tab" data-target="crudTab">Produtos</button>
+    </nav>
+    
+    <div class="connection-status" id="connectionStatus">Conectado</div>
+
+    <!-- TAB: PDV -->
+    <div id="pdvTab" class="tab-content active">
+      <!-- Filtro de Categoria Horizontal -->
+      <div class="horizontal-scroll" id="mobileCategories">
+        <!-- Preenchido via JS -->
+      </div>
+      
+      <!-- Lista de Produtos -->
+      <div class="product-list" id="mobileProducts">
+        <!-- Preenchido via JS -->
+      </div>
+    </div>
+
+    <!-- TAB: CRUD -->
+    <div id="crudTab" class="tab-content">
+      <div class="crud-header">
+        <h2>Produtos</h2>
+        <button class="btn btn-sm btn-primary" id="btnNewProduct">+ Novo</button>
+      </div>
+      <div class="product-list" id="mobileCrudProducts">
+        <!-- Preenchido via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- PAINEL DA FILA (Flutuante na base) -->
+  <div id="queuePanel" class="queue-panel">
+    <div class="queue-header" id="queueHeader">
+      <span id="queueCount">0 itens na fila</span>
+      <span>▼</span>
+    </div>
+    <div class="queue-body" id="queueBody">
+      <!-- Preenchido via JS -->
+    </div>
+    <div class="queue-footer">
+      <button class="btn btn-block btn-success" id="btnMobilePrint">🖨️ IMPRIMIR ETIQUETAS</button>
+    </div>
+  </div>
+
+  <!-- MODAL DE PRODUTO -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Novo Produto</h3>
+        <button class="btn-icon" id="btnCloseModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editProductId">
+        <div class="form-group">
+          <label>Nome do Produto</label>
+          <input type="text" id="prodName" placeholder="Ex: Extrato de tomate">
+        </div>
+        <div class="form-group">
+          <label>Categoria</label>
+          <select id="prodCategory"></select>
+        </div>
+        <div class="form-group">
+          <label>Refrigeração</label>
+          <select id="prodRefrigeration">
+            <option value="AMBIENTE">Ambiente</option>
+            <option value="REFRIGERADO">Refrigerado</option>
+            <option value="CONGELADO">Congelado</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Dias de Validade</label>
+          <input type="number" id="prodValidity" min="1">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-block btn-primary" id="btnSaveProduct">Salvar Produto</button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
