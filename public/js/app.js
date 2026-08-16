@@ -13,6 +13,13 @@ const navButtons = document.querySelectorAll('.nav-tab');
 const connStatus = document.getElementById('connectionStatus');
 
 // 1. LOGIN
+
+// Hide Windows download link on mobile devices
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+  const dlContainer = document.getElementById('windowsDownloadContainer');
+  if (dlContainer) dlContainer.style.display = 'none';
+}
+
 // Check for URL parameters (NFC tag support)
 const urlParams = new URLSearchParams(window.location.search);
 const urlStore = urlParams.get('store');
