@@ -153,6 +153,37 @@
     </div>
   </div>
 
+  <!-- MODAL DE ETIQUETA AVULSA -->
+  <div class="modal-overlay" id="customLabelModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Etiqueta Avulsa</h3>
+        <button class="btn-icon" id="btnCloseCustomLabel"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Nome (Avulso)</label>
+          <input type="text" id="customName" placeholder="Ex: Bolo Especial">
+        </div>
+        <div class="form-group">
+          <label>Refrigeração</label>
+          <select id="customRefrigeration">
+            <option value="AMBIENTE">Ambiente</option>
+            <option value="REFRIGERADO">Refrigerado</option>
+            <option value="CONGELADO">Congelado</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Dias de Validade</label>
+          <input type="number" id="customValidity" min="1" value="1">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-block btn-primary" id="btnConfirmCustom" style="background: var(--warning);">Adicionar à Fila</button>
+      </div>
+    </div>
+  </div>
+
   <div id="toastContainer" class="toast-container"></div>
 
   <script src="js/app.js"></script>

@@ -172,7 +172,10 @@ function updateUI() {
 
 function renderCategories() {
   const container = document.getElementById('mobileCategories');
-  container.innerHTML = `<button class="cat-pill ${activeCategoryId === null ? 'active' : ''}" data-id="all">Todos</button>`;
+  container.innerHTML = `
+    <button class="cat-pill" id="btnCustomLabel" style="background: var(--warning); color: #fff; border: none; font-weight:bold;">+ Avulsa</button>
+    <button class="cat-pill ${activeCategoryId === null ? 'active' : ''}" data-id="all">Todos</button>
+  `;
   
   categories.forEach(cat => {
     const btn = document.createElement('button');
@@ -182,14 +185,59 @@ function renderCategories() {
     container.appendChild(btn);
   });
 
-  container.querySelectorAll('.cat-pill').forEach(btn => {
+  container.querySelectorAll('.cat-pill:not(#btnCustomLabel)').forEach(btn => {
     btn.addEventListener('click', () => {
       activeCategoryId = btn.dataset.id === 'all' ? null : btn.dataset.id;
       renderCategories();
       renderProducts();
     });
   });
+
+  const btnCustomLabel = document.getElementById('btnCustomLabel');
+  if (btnCustomLabel) {
+    btnCustomLabel.addEventListener('click', () => {
+      document.getElementById('customName').value = '';
+      document.getElementById('customValidity').value = '1';
+      document.getElementById('customLabelModal').classList.add('active');
+    });
+  }
 }
+
+// Modals (CRUD)
+const btnCloseProductModal = document.getElementById('btnCloseProductModal');
+if(btnCloseProductModal) btnCloseProductModal.addEventListener('click', () => {
+  document.getElementById('productModal').classList.remove('active');
+});
+
+// Custom Label Modal
+const customLabelModal = document.getElementById('customLabelModal');
+const btnCloseCustomLabel = document.getElementById('btnCloseCustomLabel');
+if (btnCloseCustomLabel) btnCloseCustomLabel.addEventListener('click', () => {
+  customLabelModal.classList.remove('active');
+});
+
+const btnConfirmCustom = document.getElementById('btnConfirmCustom');
+if (btnConfirmCustom) btnConfirmCustom.addEventListener('click', () => {
+  const name = document.getElementById('customName').value.trim();
+  const validityDays = parseInt(document.getElementById('customValidity').value);
+  const refrigerationType = document.getElementById('customRefrigeration').value;
+  
+  if (!name) {
+    showToast('Informe o nome');
+    return;
+  }
+  
+  const customProduct = {
+    id: 'avulsa_' + Date.now(),
+    name: name,
+    validityDays: validityDays || 1,
+    refrigerationType: refrigerationType,
+    categoryId: 'avulsa'
+  };
+  
+  addToQueue(customProduct);
+  customLabelModal.classList.remove('active');
+});
 
 function renderProducts() {
   const container = document.getElementById('mobileProducts');
