@@ -191,6 +191,26 @@ function renderProducts() {
     
     let badgeClass = p.refrigerationType === 'CONGELADO' ? 'badge-frozen' : (p.refrigerationType === 'REFRIGERADO' ? 'badge-refrig' : 'badge-ambient');
     
+    const queuedItem = printQueue.find(i => i.product.id === p.id);
+    const qty = queuedItem ? queuedItem.quantity : 0;
+    
+    let actionHtml = '';
+    if (qty > 0) {
+      actionHtml = `
+        <div class="prod-action" style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; padding: 2px 6px; gap: 8px;">
+          <button class="btn-icon q-minus" data-id="${p.id}" style="color: var(--primary);"><i data-lucide="minus" style="width:16px;height:16px;"></i></button>
+          <span style="font-weight: 700; font-size: 0.9rem; min-width: 16px; text-align: center;">${qty}</span>
+          <button class="btn-icon q-plus" data-id="${p.id}" style="color: var(--primary);"><i data-lucide="plus" style="width:16px;height:16px;"></i></button>
+        </div>
+      `;
+    } else {
+      actionHtml = `
+        <div class="prod-action">
+          <button class="btn btn-sm btn-secondary add-to-q" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;"><i data-lucide="plus" style="width:16px;height:16px;"></i></button>
+        </div>
+      `;
+    }
+    
     card.innerHTML = `
       <div class="prod-info">
         <h4>${p.name}</h4>
@@ -199,10 +219,20 @@ function renderProducts() {
           <span>Val: ${p.validityDays}d</span>
         </div>
       </div>
-      <div class="prod-action"><button class="btn btn-sm btn-secondary"><i data-lucide="plus" style="width:16px;height:16px;"></i></button></div>
+      ${actionHtml}
     `;
     
-    card.addEventListener('click', () => addToQueue(p));
+    card.addEventListener('click', (e) => {
+      // If clicking inside the prod-action, don't trigger the whole card unless it's the wrapper itself
+      if (e.target.closest('.q-minus')) {
+        updateQueue(p.id, -1);
+      } else if (e.target.closest('.q-plus')) {
+        updateQueue(p.id, 1);
+      } else {
+        addToQueue(p);
+      }
+    });
+    
     container.appendChild(card);
   });
   
@@ -269,13 +299,18 @@ function updateQueueUI() {
     btnPrintText.textContent = `IMPRIMIR ${count > 0 ? `(${count})` : 'ETIQUETAS'}`;
   }
   const btnPrint = document.getElementById('btnMobilePrint');
-  btnPrint.disabled = count === 0;
+  if(btnPrint) btnPrint.disabled = count === 0;
 
   const body = document.getElementById('queueBody');
-  body.innerHTML = '';
+  if(body) body.innerHTML = '';
+  
+  // Re-render product list to update inline quantity indicators
+  if (document.getElementById('pdvTab').classList.contains('active')) {
+    renderProducts();
+  }
   
   if (count === 0) {
-    queuePanel.classList.remove('expanded');
+    if(queuePanel) queuePanel.classList.remove('expanded');
     return;
   }
 
