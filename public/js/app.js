@@ -125,6 +125,10 @@ function updateUI() {
   if (catModal && catModal.classList.contains('active')) {
     renderCategoryList();
   }
+  
+  if (window.lucide) {
+    lucide.createIcons();
+  }
 }
 
 function renderCategories() {
@@ -173,7 +177,7 @@ function renderProducts() {
           <span>Val: ${p.validityDays}d</span>
         </div>
       </div>
-      <div class="prod-action"><button class="btn btn-sm btn-secondary">+</button></div>
+      <div class="prod-action"><button class="btn btn-sm btn-secondary"><i data-lucide="plus" style="width:16px;height:16px;"></i></button></div>
     `;
     
     card.addEventListener('click', () => addToQueue(p));
@@ -191,8 +195,8 @@ function renderCrudProducts() {
     card.innerHTML = `
       <div class="prod-info"><h4>${p.name}</h4><div class="prod-meta"><span>${p.code || ''}</span></div></div>
       <div class="prod-action">
-        <button class="btn-icon" data-action="edit" style="color:var(--primary); margin-right:8px;">✏️</button>
-        <button class="btn-icon" data-action="del" style="color:var(--danger);">🗑️</button>
+        <button class="btn-icon" data-action="edit" style="color:var(--primary); margin-right:8px;"><i data-lucide="pencil" style="width: 18px; height: 18px;"></i></button>
+        <button class="btn-icon" data-action="del" style="color:var(--danger);"><i data-lucide="trash-2" style="width: 18px; height: 18px;"></i></button>
       </div>
     `;
     
@@ -234,8 +238,11 @@ function updateQueueUI() {
   const count = printQueue.reduce((acc, item) => acc + item.quantity, 0);
   document.getElementById('queueCount').textContent = `${count} etiquetas na fila`;
   
+  const btnPrintText = document.getElementById('btnPrintText');
+  if (btnPrintText) {
+    btnPrintText.textContent = `IMPRIMIR ${count > 0 ? `(${count})` : 'ETIQUETAS'}`;
+  }
   const btnPrint = document.getElementById('btnMobilePrint');
-  btnPrint.textContent = `🖨️ IMPRIMIR ${count > 0 ? `(${count})` : ''}`;
   btnPrint.disabled = count === 0;
 
   const body = document.getElementById('queueBody');
@@ -252,13 +259,17 @@ function updateQueueUI() {
     div.innerHTML = `
       <div><strong>${item.product.name}</strong></div>
       <div class="qty-controls">
-        <button onclick="updateQueue('${item.product.id}', -1)">−</button>
+        <button onclick="updateQueue('${item.product.id}', -1)"><i data-lucide="minus" style="width:14px;height:14px;"></i></button>
         <span>${item.quantity}</span>
-        <button onclick="updateQueue('${item.product.id}', 1)">+</button>
+        <button onclick="updateQueue('${item.product.id}', 1)"><i data-lucide="plus" style="width:14px;height:14px;"></i></button>
       </div>
     `;
     body.appendChild(div);
   });
+  
+  if (window.lucide) {
+    lucide.createIcons();
+  }
 }
 
 document.getElementById('btnMobilePrint').addEventListener('click', () => {
@@ -375,8 +386,8 @@ function renderCategoryList() {
     card.innerHTML = `
       <div><strong>${c.name}</strong></div>
       <div>
-        <button class="btn-icon" data-action="edit" style="color:var(--primary); margin-right:8px;">✏️</button>
-        <button class="btn-icon" data-action="del" style="color:var(--danger);">🗑️</button>
+        <button class="btn-icon" data-action="edit" style="color:var(--primary); margin-right:8px;"><i data-lucide="pencil" style="width: 18px; height: 18px;"></i></button>
+        <button class="btn-icon" data-action="del" style="color:var(--danger);"><i data-lucide="trash-2" style="width: 18px; height: 18px;"></i></button>
       </div>
     `;
     card.querySelector('[data-action="edit"]').addEventListener('click', () => {

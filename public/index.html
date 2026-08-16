@@ -6,13 +6,14 @@
   <title>Etiquetas Jalapeño - PDV Mobile</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="/socket.io/socket.io.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
   
   <!-- TELA DE LOGIN -->
   <div id="loginScreen" class="screen active">
     <div class="login-container">
-      <div class="logo">🏷️</div>
+      <div class="logo"><i data-lucide="tag" style="width:48px;height:48px;color:var(--primary);"></i></div>
       <h1>Etiquetas Jalapeño</h1>
       <p class="subtitle">PDV Mobile</p>
       
@@ -35,7 +36,7 @@
     <nav class="mobile-nav">
       <button class="nav-tab active" data-target="pdvTab">PDV</button>
       <button class="nav-tab" data-target="crudTab">Produtos</button>
-      <button class="btn-icon" id="btnLogout" style="padding: 0 16px; color: var(--danger); font-size: 1.5rem;" title="Sair">🚪</button>
+      <button class="btn-icon" id="btnLogout" style="padding: 0 16px; color: var(--danger); display: flex; align-items: center;" title="Sair"><i data-lucide="log-out"></i></button>
     </nav>
     
     <div class="connection-status" id="connectionStatus">Conectado</div>
@@ -57,7 +58,7 @@
     <div id="crudTab" class="tab-content">
       <div class="crud-header">
         <h2>Produtos</h2>
-        <button class="btn btn-sm btn-primary" id="btnNewProduct">+ Novo</button>
+        <button class="btn btn-sm btn-primary" id="btnNewProduct" style="display: flex; align-items: center; gap: 4px;"><i data-lucide="plus" style="width:16px;height:16px;"></i> Novo</button>
       </div>
       <div class="product-list" id="mobileCrudProducts">
         <!-- Preenchido via JS -->
@@ -69,13 +70,15 @@
   <div id="queuePanel" class="queue-panel">
     <div class="queue-header" id="queueHeader">
       <span id="queueCount">0 itens na fila</span>
-      <span>▼</span>
+      <span id="queueIcon"><i data-lucide="chevron-down"></i></span>
     </div>
     <div class="queue-body" id="queueBody">
       <!-- Preenchido via JS -->
     </div>
     <div class="queue-footer">
-      <button class="btn btn-block btn-success" id="btnMobilePrint">🖨️ IMPRIMIR ETIQUETAS</button>
+      <button class="btn btn-block btn-success" id="btnMobilePrint" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <i data-lucide="printer"></i> <span id="btnPrintText">IMPRIMIR ETIQUETAS</span>
+      </button>
     </div>
   </div>
 
@@ -84,7 +87,7 @@
     <div class="modal">
       <div class="modal-header">
         <h3 id="modalTitle">Novo Produto</h3>
-        <button class="btn-icon" id="btnCloseModal">✕</button>
+        <button class="btn-icon" id="btnCloseModal"><i data-lucide="x"></i></button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="editProductId">
@@ -100,7 +103,7 @@
           <label>Categoria</label>
           <div style="display: flex; gap: 8px;">
             <select id="prodCategory" style="flex: 1;"></select>
-            <button class="btn btn-secondary" id="btnManageCategories" style="padding: 0 12px; height: 44px; display: flex; align-items: center; justify-content: center;">⚙️</button>
+            <button class="btn btn-secondary" id="btnManageCategories" style="padding: 0 12px; height: 44px; display: flex; align-items: center; justify-content: center;"><i data-lucide="settings"></i></button>
           </div>
         </div>
         <div class="form-group">
@@ -127,7 +130,7 @@
     <div class="modal">
       <div class="modal-header">
         <h3>Gerenciar Categorias</h3>
-        <button class="btn-icon" id="btnCloseCatModal">✕</button>
+        <button class="btn-icon" id="btnCloseCatModal"><i data-lucide="x"></i></button>
       </div>
       <div class="modal-body">
         <div style="display: flex; gap: 8px; margin-bottom: 16px;">
