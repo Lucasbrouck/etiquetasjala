@@ -83,6 +83,20 @@ function updateUI() {
   renderProducts();
   renderCrudProducts();
   populateCategorySelect();
+  
+  const modal = document.getElementById('productModal');
+  if (modal && modal.classList.contains('active')) {
+    const editId = document.getElementById('editProductId').value;
+    if (editId) {
+      const p = products.find(prod => prod.id === editId);
+      if (p) document.getElementById('prodCategory').value = p.categoryId;
+    }
+  }
+  
+  const catModal = document.getElementById('categoryModal');
+  if (catModal && catModal.classList.contains('active')) {
+    renderCategoryList();
+  }
 }
 
 function renderCategories() {
@@ -259,6 +273,7 @@ function openModal(product = null) {
     document.getElementById('modalTitle').textContent = 'Editar Produto';
     document.getElementById('editProductId').value = product.id;
     document.getElementById('prodName').value = product.name;
+    document.getElementById('prodCode').value = product.code || '';
     document.getElementById('prodCategory').value = product.categoryId;
     document.getElementById('prodRefrigeration').value = product.refrigerationType;
     document.getElementById('prodValidity').value = product.validityDays;
@@ -266,6 +281,7 @@ function openModal(product = null) {
     document.getElementById('modalTitle').textContent = 'Novo Produto';
     document.getElementById('editProductId').value = '';
     document.getElementById('prodName').value = '';
+    document.getElementById('prodCode').value = '';
     document.getElementById('prodCategory').value = '';
     document.getElementById('prodRefrigeration').value = 'AMBIENTE';
     document.getElementById('prodValidity').value = '';
@@ -279,6 +295,7 @@ document.getElementById('btnSaveProduct').addEventListener('click', () => {
   const categoryId = document.getElementById('prodCategory').value;
   const refrigerationType = document.getElementById('prodRefrigeration').value;
   const validityDays = parseInt(document.getElementById('prodValidity').value);
+  let code = document.getElementById('prodCode').value.trim().toUpperCase();
   
   if (!name || !categoryId || !validityDays) {
     showToast('Preencha todos os campos!');
@@ -287,7 +304,9 @@ document.getElementById('btnSaveProduct').addEventListener('click', () => {
 
   // Generate generic code on mobile since we don't have the main process logic here
   // The local app can re-generate it if needed, or we just generate a basic one
-  const code = name.split(' ').map(w => w[0]).join('').substring(0,3).toUpperCase();
+  if (!code) {
+    code = name.split(' ').map(w => w[0]).join('').substring(0,3).toUpperCase();
+  }
   
   const productData = { name, categoryId, refrigerationType, validityDays, code };
   
@@ -300,6 +319,54 @@ document.getElementById('btnSaveProduct').addEventListener('click', () => {
   modal.classList.remove('active');
   showToast('Enviado para sincronização...');
 });
+
+// 7. CATEGORY MODAL
+const catModal = document.getElementById('categoryModal');
+document.getElementById('btnManageCategories').addEventListener('click', (e) => {
+  e.preventDefault();
+  renderCategoryList();
+  catModal.classList.add('active');
+});
+document.getElementById('btnCloseCatModal').addEventListener('click', () => catModal.classList.remove('active'));
+
+document.getElementById('btnAddCategory').addEventListener('click', () => {
+  const name = document.getElementById('newCatName').value.trim();
+  if (name) {
+    socket.emit('remote-create-category', name);
+    document.getElementById('newCatName').value = '';
+    showToast('Adicionando...');
+  }
+});
+
+function renderCategoryList() {
+  const container = document.getElementById('catList');
+  container.innerHTML = '';
+  categories.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'queue-item';
+    card.innerHTML = `
+      <div><strong>${c.name}</strong></div>
+      <div>
+        <button class="btn-icon" data-action="edit" style="color:var(--primary); margin-right:8px;">✏️</button>
+        <button class="btn-icon" data-action="del" style="color:var(--danger);">🗑️</button>
+      </div>
+    `;
+    card.querySelector('[data-action="edit"]').addEventListener('click', () => {
+      const newName = prompt('Editar categoria:', c.name);
+      if (newName && newName.trim()) {
+        socket.emit('remote-update-category', { id: c.id, name: newName.trim() });
+        showToast('Atualizando...');
+      }
+    });
+    card.querySelector('[data-action="del"]').addEventListener('click', () => {
+      if (confirm(`Excluir a categoria "${c.name}"?`)) {
+        socket.emit('remote-delete-category', c.id);
+        showToast('Excluindo...');
+      }
+    });
+    container.appendChild(card);
+  });
+}
 
 // TOAST
 function showToast(msg) {

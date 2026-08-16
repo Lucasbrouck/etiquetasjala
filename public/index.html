@@ -92,8 +92,15 @@
           <input type="text" id="prodName" placeholder="Ex: Extrato de tomate">
         </div>
         <div class="form-group">
+          <label>Código (Lote) <span style="font-size: 10px; color: var(--text-muted); font-weight: normal;">Deixe em branco para auto-gerar</span></label>
+          <input type="text" id="prodCode" placeholder="Ex: EXT" style="text-transform: uppercase;">
+        </div>
+        <div class="form-group">
           <label>Categoria</label>
-          <select id="prodCategory"></select>
+          <div style="display: flex; gap: 8px;">
+            <select id="prodCategory" style="flex: 1;"></select>
+            <button class="btn btn-secondary" id="btnManageCategories" style="padding: 0 12px; height: 44px; display: flex; align-items: center; justify-content: center;">⚙️</button>
+          </div>
         </div>
         <div class="form-group">
           <label>Refrigeração</label>
@@ -114,6 +121,25 @@
     </div>
   </div>
   
+  <!-- MODAL DE CATEGORIAS -->
+  <div class="modal-overlay" id="categoryModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Gerenciar Categorias</h3>
+        <button class="btn-icon" id="btnCloseCatModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+          <input type="text" id="newCatName" placeholder="Nova categoria..." style="flex: 1; height: 44px; padding: 0 12px; border: 1px solid var(--border); border-radius: 8px;">
+          <button class="btn btn-primary" id="btnAddCategory" style="padding: 0 16px;">Adicionar</button>
+        </div>
+        <div class="product-list" id="catList">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="toastContainer" class="toast-container"></div>
 
   <script src="js/app.js"></script>
