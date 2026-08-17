@@ -173,7 +173,7 @@ function updateUI() {
 function renderCategories() {
   const container = document.getElementById('mobileCategories');
   container.innerHTML = `
-    <button class="cat-pill" id="btnCustomLabel" style="background: var(--warning); color: #fff; border: none; font-weight:bold;">+ Avulsa</button>
+    <button class="cat-pill" id="btnCustomLabel" style="background: #D97706; color: #fff; border: none; font-weight:bold;">+ Avulsa</button>
     <button class="cat-pill ${activeCategoryId === null ? 'active' : ''}" data-id="all">Todos</button>
   `;
   
