@@ -373,9 +373,6 @@ function updateQueueUI() {
   }
   const btnPrint = document.getElementById('btnMobilePrint');
   if(btnPrint) btnPrint.disabled = count === 0;
-  
-  const btnClear = document.getElementById('btnClearQueue');
-  if (btnClear) btnClear.style.display = count > 0 ? 'inline-block' : 'none';
 
   const body = document.getElementById('queueBody');
   if(body) body.innerHTML = '';
