@@ -333,7 +333,15 @@ function renderCrudProducts() {
 
 // 5. QUEUE LOGIC
 const queuePanel = document.getElementById('queuePanel');
-document.getElementById('queueHeader').addEventListener('click', () => {
+document.getElementById('queueHeader').addEventListener('click', (e) => {
+  if (e.target.closest('#btnClearQueue')) {
+    if (confirm('Tem certeza que deseja limpar toda a fila?')) {
+      printQueue = [];
+      updateQueueUI();
+      showToast('Fila limpa');
+    }
+    return;
+  }
   if (printQueue.length > 0) queuePanel.classList.toggle('expanded');
 });
 
@@ -365,6 +373,9 @@ function updateQueueUI() {
   }
   const btnPrint = document.getElementById('btnMobilePrint');
   if(btnPrint) btnPrint.disabled = count === 0;
+  
+  const btnClear = document.getElementById('btnClearQueue');
+  if (btnClear) btnClear.style.display = count > 0 ? 'inline-block' : 'none';
 
   const body = document.getElementById('queueBody');
   if(body) body.innerHTML = '';
